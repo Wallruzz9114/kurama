@@ -1,0 +1,37 @@
+server/.vscode
+server/API/bin
+server/API/obj
+server/API/Properties
+server/API/appsettings.Development.json
+server/API/appsettings.json
+server/Core/bin
+server/Core/obj
+server/Middleware/bin
+server/Middleware/obj
+server/Data/bin
+server/Data/obj
+server/.DS_Store
+server/API/dump.rdb
+server/.DS_Store
+
+# dependencies
+web/node_modules
+web/.pnp
+web/.pnp.js
+
+# testing
+web/coverage
+
+# production
+web/build
+
+# misc
+web/.DS_Store
+web/.env.local
+web/.env.development.local
+web/.env.test.local
+web/.env.production.local
+
+web/npm-debug.log*
+web/yarn-debug.log*
+web/yarn-error.log*
