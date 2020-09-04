@@ -4,7 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Middleware;
+using Middleware.Contexts;
+using Middleware.Seed;
 
 namespace API
 {
@@ -22,6 +23,8 @@ namespace API
                 {
                     var dataContext = serviceProvider.GetRequiredService<DataContext>();
                     dataContext.Database.Migrate();
+                    // Seed data to local db
+                    DataSeeder.SeedData(dataContext);
                 }
                 catch (Exception exception)
                 {

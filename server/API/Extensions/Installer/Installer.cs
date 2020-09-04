@@ -1,7 +1,9 @@
+using Core.Activities;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Middleware;
+using Middleware.Contexts;
 
 namespace API.Extensions.Installer
 {
@@ -20,6 +22,8 @@ namespace API.Extensions.Installer
                 "CORSPolicy",
                 policy => policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000"))
             );
+            // Add MediatR
+            services.AddMediatR(typeof(ListAll.Handler).Assembly);
         }
     }
 }

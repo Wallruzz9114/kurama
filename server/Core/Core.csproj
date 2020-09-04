@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <ItemGroup>
-    <ProjectReference Include="..\Data\Data.csproj" />
-    <ProjectReference Include="..\Middleware\Middleware.csproj" />
+    <ProjectReference Include="..\Data\Data.csproj"/>
+    <ProjectReference Include="..\Middleware\Middleware.csproj"/>
   </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.1.0"/>
+  </ItemGroup>
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
-
 </Project>
