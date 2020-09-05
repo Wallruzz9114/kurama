@@ -22,10 +22,16 @@ namespace API
         {
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
+            // global cors policy
+            app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true) // allow any origin
+                .AllowCredentials()); // allow credentials
+
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
-            app.UseCors("CORSPolicy");
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }

@@ -11,16 +11,13 @@ namespace API.Extensions.Installer
     {
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
+            // Add CORS
+            services.AddCors();
             // Controllers
             services.AddControllers();
             // Add PostgreSQL locally
             services.AddDbContext<DataContext>(
                 ob => ob.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
-            );
-            // Add CORS
-            services.AddCors(options => options.AddPolicy(
-                "CORSPolicy",
-                policy => policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000"))
             );
             // Add MediatR
             services.AddMediatR(typeof(ListAll.Handler).Assembly);
