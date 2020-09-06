@@ -1,23 +1,16 @@
-import React, { SyntheticEvent } from 'react';
+import React, { useContext } from 'react';
 import { Item, Button, Label, Segment } from 'semantic-ui-react';
 import { IActivity } from '../../../app/models/activity';
+import { observer } from 'mobx-react-lite';
+import ActivityStore from '../../../app/mobx/activityStore';
 
-interface IProps {
-  activities: IActivity[];
-  selectActivity: (id: string) => void;
-  deleteActivity: (
-    event: SyntheticEvent<HTMLButtonElement>,
-    id: string
-  ) => void;
-  submittingForm: boolean;
-  target: string;
-}
+const ActivityList: React.FC = () => {
+  const activityStore = useContext(ActivityStore);
 
-const ActivityList: React.FC<IProps> = (props) => {
   return (
     <Segment clearing>
       <Item.Group divided>
-        {props.activities.map((activity: IActivity) => (
+        {activityStore.activitiesSortedByDate.map((activity: IActivity) => (
           <Item key={activity.id}>
             <Item.Content>
               <Item.Header as='a'>{activity.title}</Item.Header>
@@ -30,17 +23,20 @@ const ActivityList: React.FC<IProps> = (props) => {
               </Item.Description>
               <Item.Extra>
                 <Button
-                  onClick={() => props.selectActivity(activity.id)}
+                  onClick={() => activityStore.selectActivity(activity.id)}
                   floated='right'
                   content='View'
                   color='blue'
                 />
                 <Button
                   name={activity.id}
-                  loading={props.target === activity.id && props.submittingForm}
+                  loading={
+                    activityStore.target === activity.id &&
+                    activityStore.submittingForm
+                  }
                   onClick={(
                     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-                  ) => props.deleteActivity(event, activity.id)}
+                  ) => activityStore.deleteActivity(event, activity.id)}
                   floated='right'
                   content='Delete'
                   color='red'
@@ -55,4 +51,4 @@ const ActivityList: React.FC<IProps> = (props) => {
   );
 };
 
-export default ActivityList;
+export default observer(ActivityList);

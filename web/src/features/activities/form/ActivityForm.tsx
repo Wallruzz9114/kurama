@@ -1,20 +1,16 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, useContext } from 'react';
 import { Segment, Form, Button } from 'semantic-ui-react';
 import { IActivity } from '../../../app/models/activity';
 import { v4 as uuid } from 'uuid';
+import ActivityStore from '../../../app/mobx/activityStore';
+import { observer } from 'mobx-react-lite';
 
-interface IProps {
-  setEditMode: (editMode: boolean) => void;
-  activity: IActivity | null;
-  createActivity: (activity: IActivity) => void;
-  updateActivity: (activity: IActivity) => void;
-  submittingForm: boolean;
-}
+const ActivityForm: React.FC = () => {
+  const activityStore = useContext(ActivityStore);
 
-const ActivityForm: React.FC<IProps> = (props) => {
   const initializeForm = () =>
-    props.activity
-      ? props.activity
+    activityStore.selectedActivity
+      ? activityStore.selectedActivity
       : {
           id: '',
           title: '',
@@ -37,8 +33,8 @@ const ActivityForm: React.FC<IProps> = (props) => {
 
   const submitForm = () =>
     activity.id.length === 0
-      ? props.createActivity({ ...activity, id: uuid() })
-      : props.updateActivity(activity);
+      ? activityStore.createActivity({ ...activity, id: uuid() })
+      : activityStore.updateActivity(activity);
 
   return (
     <Segment clearing>
@@ -82,14 +78,14 @@ const ActivityForm: React.FC<IProps> = (props) => {
           value={activity.venue}
         />
         <Button
-          loading={props.submittingForm}
+          loading={activityStore.submittingForm}
           floated='right'
           positive
           type='submit'
           content='Submit'
         />
         <Button
-          onClick={() => props.setEditMode(false)}
+          onClick={activityStore.cancelForm}
           floated='right'
           type='submit'
           content='Cancel'
@@ -99,4 +95,4 @@ const ActivityForm: React.FC<IProps> = (props) => {
   );
 };
 
-export default ActivityForm;
+export default observer(ActivityForm);
