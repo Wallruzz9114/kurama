@@ -23,7 +23,6 @@ namespace API
                 {
                     var dataContext = serviceProvider.GetRequiredService<DataContext>();
                     dataContext.Database.Migrate();
-                    // Seed data to local db
                     DataSeeder.SeedData(dataContext);
                 }
                 catch (Exception exception)

@@ -12,7 +12,6 @@ namespace Middleware.Seed
         {
             if (!dataContext.Activities.Any())
             {
-                // Create a list of 10 activities
                 var activities = new List<Activity>
                 {
                     new Activity
@@ -106,7 +105,7 @@ namespace Middleware.Seed
                         Venue = "Cinema",
                     }
                 };
-                // Insert list into database
+
                 dataContext.Activities.AddRange(activities);
                 dataContext.SaveChanges();
             }

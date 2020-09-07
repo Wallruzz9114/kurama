@@ -1,6 +1,8 @@
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Errors;
 using MediatR;
 using Middleware.Contexts;
 
@@ -25,7 +27,7 @@ namespace Core.Activities
                 var activityFromDatabase = await _dataContext.Activities.FindAsync(command.Id);
                 // Throw exception if activity can't be found
                 if (activityFromDatabase == null)
-                    throw new Exception($"Could not find activity: { activityFromDatabase.Id }");
+                    throw new RESTException(HttpStatusCode.NotFound, new { activityFromDatabase = "Not Found" });
 
                 // Remove activity
                 _dataContext.Remove(activityFromDatabase);

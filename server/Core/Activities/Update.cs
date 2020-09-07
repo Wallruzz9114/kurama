@@ -1,6 +1,9 @@
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Errors;
+using FluentValidation;
 using MediatR;
 using Middleware.Contexts;
 
@@ -19,6 +22,19 @@ namespace Core.Activities
             public string Venue { get; set; }
         }
 
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(command => command.Title).NotEmpty();
+                RuleFor(command => command.Description).NotEmpty();
+                RuleFor(command => command.Category).NotEmpty();
+                RuleFor(command => command.Date).NotEmpty();
+                RuleFor(command => command.City).NotEmpty();
+                RuleFor(command => command.Venue).NotEmpty();
+            }
+        }
+
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _dataContext;
@@ -27,13 +43,11 @@ namespace Core.Activities
 
             public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
             {
-                // Get activity from database
                 var activityFromDatabase = await _dataContext.Activities.FindAsync(command.Id);
-                // Throw exception if activity can't be found
-                if (activityFromDatabase == null)
-                    throw new Exception($"Could not find activity: { activityFromDatabase.Id }");
 
-                // Update activity properties
+                if (activityFromDatabase == null)
+                    throw new RESTException(HttpStatusCode.NotFound, new { activityFromDatabase = "Not Found" });
+
                 activityFromDatabase.Title = command.Title ?? activityFromDatabase.Title;
                 activityFromDatabase.Description = command.Description ?? activityFromDatabase.Description;
                 activityFromDatabase.Category = command.Category ?? activityFromDatabase.Category;
@@ -41,7 +55,6 @@ namespace Core.Activities
                 activityFromDatabase.City = command.City ?? activityFromDatabase.City;
                 activityFromDatabase.Venue = command.Venue ?? activityFromDatabase.Venue;
 
-                // Save changes and handle consequences
                 var activityUpdated = await _dataContext.SaveChangesAsync() > 0;
                 if (activityUpdated) return Unit.Value;
 

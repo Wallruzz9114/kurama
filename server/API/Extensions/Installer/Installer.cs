@@ -1,4 +1,5 @@
 using Core.Activities;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -11,15 +12,12 @@ namespace API.Extensions.Installer
     {
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            // Add CORS
             services.AddCors();
-            // Controllers
-            services.AddControllers();
-            // Add PostgreSQL locally
+            services.AddControllers()
+                .AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Create>());
             services.AddDbContext<DataContext>(
                 ob => ob.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
             );
-            // Add MediatR
             services.AddMediatR(typeof(ListAll.Handler).Assembly);
         }
     }
