@@ -15,22 +15,22 @@ namespace Core.Actions.AppUsers
         public class Handler : IRequestHandler<Query, AppUserViewModel>
         {
             private readonly UserManager<AppUser> _userManager;
-            private readonly IJWTGenerator _jWTGenerator;
-            private readonly IAppUserAccessor _appUserAccessor;
+            private readonly IJWTGeneratorService _jWTGenerator;
+            private readonly IAppUserService _appUserService;
 
             public Handler(
                 UserManager<AppUser> userManager,
-                IJWTGenerator jWTGenerator,
-                IAppUserAccessor appUserAccessor)
+                IJWTGeneratorService jWTGenerator,
+                IAppUserService appUserService)
             {
                 _userManager = userManager;
                 _jWTGenerator = jWTGenerator;
-                _appUserAccessor = appUserAccessor;
+                _appUserService = appUserService;
             }
 
             public async Task<AppUserViewModel> Handle(Query query, CancellationToken cancellationToken)
             {
-                var appUser = await _userManager.FindByNameAsync(_appUserAccessor.GetCurrentAppUserUsername());
+                var appUser = await _userManager.FindByNameAsync(_appUserService.GetCurrentAppUserUsername());
                 return new AppUserViewModel
                 {
                     DisplayName = appUser.DisplayName,

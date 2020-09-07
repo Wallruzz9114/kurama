@@ -1,9 +1,11 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Interfaces.Security;
 using Data;
 using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Middleware.Contexts;
 
 namespace Core.Actions.Activities
@@ -37,8 +39,13 @@ namespace Core.Actions.Activities
         public class Handler : IRequestHandler<Command>
         {
             private readonly DataContext _dataContext;
+            private readonly IAppUserService _appUserService;
 
-            public Handler(DataContext dataContext) => _dataContext = dataContext;
+            public Handler(DataContext dataContext, IAppUserService appUserService)
+            {
+                _dataContext = dataContext;
+                _appUserService = appUserService;
+            }
 
             public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
             {
@@ -55,11 +62,23 @@ namespace Core.Actions.Activities
 
                 _dataContext.Activities.Add(activity);
 
+                var appUser = await _dataContext.Users
+                    .SingleOrDefaultAsync(au => au.UserName == _appUserService.GetCurrentAppUserUsername());
+                var activityAttendee = new ActivityAttendee
+                {
+                    AppUser = appUser,
+                    Activity = activity,
+                    IsHosting = true,
+                    DateJoined = DateTime.Now
+                };
+
+                _dataContext.ActivityAttendees.Add(activityAttendee);
+
                 var activityCreated = await _dataContext.SaveChangesAsync() > 0;
 
                 if (activityCreated) return Unit.Value;
 
-                throw new Exception("Problem saving changes");
+                throw new Exception("Problem creating activity");
             }
         }
     }

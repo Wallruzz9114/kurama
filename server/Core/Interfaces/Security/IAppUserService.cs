@@ -1,6 +1,6 @@
 namespace Core.Interfaces.Security
 {
-    public interface IAppUserAccessor
+    public interface IAppUserService
     {
         string GetCurrentAppUserUsername();
     }

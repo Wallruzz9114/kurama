@@ -1,17 +1,16 @@
 using System;
 using System.Collections.Generic;
 
-namespace Data
+namespace Core.ViewModels
 {
-    public class Activity
+    public class ActivityViewModel
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string Category { get; set; }
+        public string Catagory { get; set; }
         public DateTime Date { get; set; }
-        public string City { get; set; }
         public string Venue { get; set; }
-        public virtual IReadOnlyList<ActivityAttendee> ActivityAttendees { get; set; }
+        public IReadOnlyList<ActivityAttendeeViewModel> ActivityAttendees { get; set; }
     }
 }

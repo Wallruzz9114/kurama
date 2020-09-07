@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using Core.ViewModels;
 using Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -10,16 +12,26 @@ namespace Core.Actions.Activities
 {
     public class ListAll
     {
-        public class Query : IRequest<IReadOnlyList<Activity>> { }
+        public class Query : IRequest<IReadOnlyList<ActivityViewModel>> { }
 
-        public class Handler : IRequestHandler<Query, IReadOnlyList<Activity>>
+        public class Handler : IRequestHandler<Query, IReadOnlyList<ActivityViewModel>>
         {
             private readonly DataContext _dataContext;
+            private readonly IMapper _mapper;
 
-            public Handler(DataContext dataContext) => _dataContext = dataContext;
+            public Handler(DataContext dataContext, IMapper mapper)
+            {
+                _dataContext = dataContext;
+                _mapper = mapper;
+            }
 
-            public async Task<IReadOnlyList<Activity>> Handle(Query query, CancellationToken cancellationToken) =>
-                await _dataContext.Activities.ToListAsync();
+            public async Task<IReadOnlyList<ActivityViewModel>> Handle(
+                Query query,
+                CancellationToken cancellationToken)
+            {
+                var activities = await _dataContext.Activities.ToListAsync();
+                return _mapper.Map<IReadOnlyList<Activity>, IReadOnlyList<ActivityViewModel>>(activities);
+            }
         }
     }
 }

@@ -40,9 +40,9 @@ namespace Core.Actions.AppUsers
         {
             private readonly DataContext _dataContext;
             private readonly UserManager<AppUser> _userManager;
-            private readonly IJWTGenerator _jwtGenerator;
+            private readonly IJWTGeneratorService _jwtGenerator;
 
-            public Handler(DataContext dataContext, UserManager<AppUser> userManager, IJWTGenerator jwtGenerator)
+            public Handler(DataContext dataContext, UserManager<AppUser> userManager, IJWTGeneratorService jwtGenerator)
             {
                 _dataContext = dataContext;
                 _userManager = userManager;

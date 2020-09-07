@@ -1,8 +1,10 @@
 using System.Text;
+using AutoMapper;
 using Core.Actions.Activities;
 using Core.Interfaces.Security;
 using Data;
 using FluentValidation.AspNetCore;
+using Infrastructure.Requirements;
 using Infrastructure.Services.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -26,17 +28,20 @@ namespace API.Extensions.Installer
                     policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:3000")));
 
             services.AddControllers(options =>
-                {
-                    var authorizationPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-                    options.Filters.Add(new AuthorizeFilter(authorizationPolicy));
-                })
-                .AddFluentValidation(config => config.RegisterValidatorsFromAssemblyContaining<Create>());
+            {
+                var authorizationPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                options.Filters.Add(new AuthorizeFilter(authorizationPolicy));
+            })
+            .AddFluentValidation(config => config.RegisterValidatorsFromAssemblyContaining<Create>());
 
-            services.AddDbContext<DataContext>(
-                ob => ob.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
-            );
+            services.AddDbContext<DataContext>(ob =>
+            {
+                ob.UseLazyLoadingProxies();
+                ob.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+            });
 
             services.AddMediatR(typeof(ListAll.Handler).Assembly);
+            services.AddAutoMapper(typeof(ListAll.Handler));
 
             var ib = services.AddIdentityCore<AppUser>();
             var identityBuilder = new IdentityBuilder(ib.UserType, ib.Services);
@@ -44,10 +49,14 @@ namespace API.Extensions.Installer
             identityBuilder.AddEntityFrameworkStores<DataContext>();
             identityBuilder.AddSignInManager<SignInManager<AppUser>>();
 
+            services.AddAuthorization(options =>
+                options.AddPolicy("AppUserIsHostingActivity", pb => pb.Requirements.Add(new IsHostRequirement())));
+            services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
+
             var symetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["TokenKey"]));
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = symetricSecurityKey,
@@ -55,8 +64,8 @@ namespace API.Extensions.Installer
                     ValidateIssuer = false
                 });
 
-            services.AddScoped<IJWTGenerator, JWTGeneratorService>();
-            services.AddScoped<IAppUserAccessor, AppUserAccessor>();
+            services.AddScoped<IJWTGeneratorService, JWTGeneratorService>();
+            services.AddScoped<IAppUserService, AppUserService>();
         }
     }
 }

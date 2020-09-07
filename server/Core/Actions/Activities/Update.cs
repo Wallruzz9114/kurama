@@ -43,22 +43,22 @@ namespace Core.Actions.Activities
 
             public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
             {
-                var activityFromDatabase = await _dataContext.Activities.FindAsync(command.Id);
+                var activity = await _dataContext.Activities.FindAsync(command.Id);
 
-                if (activityFromDatabase == null)
-                    throw new RESTException(HttpStatusCode.NotFound, new { activityFromDatabase = "Not Found" });
+                if (activity == null)
+                    throw new RESTException(HttpStatusCode.NotFound, new { activity = "Not Found" });
 
-                activityFromDatabase.Title = command.Title ?? activityFromDatabase.Title;
-                activityFromDatabase.Description = command.Description ?? activityFromDatabase.Description;
-                activityFromDatabase.Category = command.Category ?? activityFromDatabase.Category;
-                activityFromDatabase.Date = command.Date ?? activityFromDatabase.Date;
-                activityFromDatabase.City = command.City ?? activityFromDatabase.City;
-                activityFromDatabase.Venue = command.Venue ?? activityFromDatabase.Venue;
+                activity.Title = command.Title ?? activity.Title;
+                activity.Description = command.Description ?? activity.Description;
+                activity.Category = command.Category ?? activity.Category;
+                activity.Date = command.Date ?? activity.Date;
+                activity.City = command.City ?? activity.City;
+                activity.Venue = command.Venue ?? activity.Venue;
 
                 var activityUpdated = await _dataContext.SaveChangesAsync() > 0;
                 if (activityUpdated) return Unit.Value;
 
-                throw new Exception($"Problem updating activity: { activityFromDatabase.Id }");
+                throw new Exception($"Problem updating activity: { activity.Id }");
             }
         }
     }

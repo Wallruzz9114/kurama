@@ -32,12 +32,12 @@ namespace Core.Actions.AppUsers
         {
             private readonly UserManager<AppUser> _userManager;
             private readonly SignInManager<AppUser> _signInManager;
-            private readonly IJWTGenerator _jwtGenerator;
+            private readonly IJWTGeneratorService _jwtGenerator;
 
             public Handler(
                 UserManager<AppUser> userManager,
                 SignInManager<AppUser> signInManager,
-                IJWTGenerator jwtGenerator)
+                IJWTGeneratorService jwtGenerator)
             {
                 _signInManager = signInManager;
                 _userManager = userManager;
