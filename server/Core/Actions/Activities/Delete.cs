@@ -6,7 +6,7 @@ using Core.Errors;
 using MediatR;
 using Middleware.Contexts;
 
-namespace Core.Activities
+namespace Core.Actions.Activities
 {
     public class Delete
     {

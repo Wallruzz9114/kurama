@@ -6,7 +6,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Middleware.Contexts;
 
-namespace Core.Activities
+namespace Core.Actions.Activities
 {
     public class ListAll
     {
