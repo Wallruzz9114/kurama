@@ -23,16 +23,13 @@ namespace Core.Activities
 
             public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
             {
-                // Get activity from database
                 var activityFromDatabase = await _dataContext.Activities.FindAsync(command.Id);
-                // Throw exception if activity can't be found
+
                 if (activityFromDatabase == null)
                     throw new RESTException(HttpStatusCode.NotFound, new { activityFromDatabase = "Not Found" });
 
-                // Remove activity
                 _dataContext.Remove(activityFromDatabase);
 
-                // Save changes and handle consequences
                 var activityRemoved = await _dataContext.SaveChangesAsync() > 0;
                 if (activityRemoved) return Unit.Value;
 
