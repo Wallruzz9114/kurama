@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Interfaces.Security;
@@ -31,12 +32,13 @@ namespace Core.Actions.AppUsers
             public async Task<AppUserViewModel> Handle(Query query, CancellationToken cancellationToken)
             {
                 var appUser = await _userManager.FindByNameAsync(_appUserService.GetCurrentAppUserUsername());
+
                 return new AppUserViewModel
                 {
                     DisplayName = appUser.DisplayName,
                     Username = appUser.UserName,
                     Token = _jWTGenerator.CreateToken(appUser),
-                    ProfilePictureURL = null
+                    ProfilePictureURL = appUser.Photos.FirstOrDefault(photo => photo.IsProfilePicture)?.URL
                 };
             }
         }

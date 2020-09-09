@@ -12,21 +12,22 @@ namespace API.Controllers
     public class ActivitiesController : BaseController
     {
         [HttpGet]
-        public async Task<IReadOnlyList<ActivityViewModel>> ListAll() => await Mediator.Send(new ListAll.Query());
+        public async Task<IReadOnlyList<ActivityViewModel>> ListAll() => await Mediator.Send(new FindAll.Query());
 
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<ActivityViewModel> GetOne(Guid id) => await Mediator.Send(new GetOne.Query { Id = id });
+        public async Task<ActivityViewModel> GetOne(Guid id) => await Mediator.Send(new FindOne.Query { Id = id });
 
         [HttpPost]
-        public async Task<ActionResult<Unit>> Create(Create.Command command) => await Mediator.Send(command);
+        public async Task<ActionResult<Unit>> Create(Create.Command createCommand) =>
+            await Mediator.Send(createCommand);
 
         [Authorize(Policy = "AppUserIsHostingActivity")]
         [HttpPut("{id}")]
-        public async Task<ActionResult<Unit>> Update(Guid id, Update.Command command)
+        public async Task<ActionResult<Unit>> Update(Guid id, Update.Command updateCommand)
         {
-            command.Id = id;
-            return await Mediator.Send(command);
+            updateCommand.Id = id;
+            return await Mediator.Send(updateCommand);
         }
 
         [Authorize(Policy = "AppUserIsHostingActivity")]

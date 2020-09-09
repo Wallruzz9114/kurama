@@ -1,11 +1,14 @@
 using System.Text;
 using AutoMapper;
 using Core.Actions.Activities;
+using Core.Interfaces;
 using Core.Interfaces.Security;
 using Data;
 using FluentValidation.AspNetCore;
 using Infrastructure.Requirements;
+using Infrastructure.Services;
 using Infrastructure.Services.Security;
+using Infrastructure.Settings;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -40,8 +43,8 @@ namespace API.Extensions.Installer
                 ob.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddMediatR(typeof(ListAll.Handler).Assembly);
-            services.AddAutoMapper(typeof(ListAll.Handler));
+            services.AddMediatR(typeof(FindAll.Handler).Assembly);
+            services.AddAutoMapper(typeof(FindAll.Handler));
 
             var ib = services.AddIdentityCore<AppUser>();
             var identityBuilder = new IdentityBuilder(ib.UserType, ib.Services);
@@ -66,6 +69,9 @@ namespace API.Extensions.Installer
 
             services.AddScoped<IJWTGeneratorService, JWTGeneratorService>();
             services.AddScoped<IAppUserService, AppUserService>();
+            services.AddScoped<IPhotoService, PhotoService>();
+
+            services.Configure<CloudinarySettings>(configuration.GetSection("Cloudinary"));
         }
     }
 }

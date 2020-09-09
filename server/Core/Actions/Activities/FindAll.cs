@@ -10,7 +10,7 @@ using Middleware.Contexts;
 
 namespace Core.Actions.Activities
 {
-    public class ListAll
+    public class FindAll
     {
         public class Query : IRequest<IReadOnlyList<ActivityViewModel>> { }
 

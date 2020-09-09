@@ -1,6 +1,8 @@
 using System.Threading.Tasks;
 using Core.Actions.AppUsers;
+using Core.Actions.Photos;
 using Core.ViewModels;
+using Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,11 +16,15 @@ namespace API.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<ActionResult<AppUserViewModel>> Register(Register.Command command) =>
-            await Mediator.Send(command);
+        public async Task<ActionResult<AppUserViewModel>> Register(Register.Command registerCommand) =>
+            await Mediator.Send(registerCommand);
 
         [HttpGet("get")]
         public async Task<ActionResult<AppUserViewModel>> GetCurrentAppUser() =>
             await Mediator.Send(new GetCurrentAppUser.Query());
+
+        [HttpGet("{username}")]
+        public async Task<ActionResult<ProfileViewModel>> GetProfile(string username) =>
+            await Mediator.Send(new GetProfile.Query { Username = username });
     }
 }

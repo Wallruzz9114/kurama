@@ -11,7 +11,7 @@ using Middleware.Contexts;
 
 namespace Core.Actions.Activities
 {
-    public class GetOne
+    public class FindOne
     {
         public class Query : IRequest<ActivityViewModel>
         {
