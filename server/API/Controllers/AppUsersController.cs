@@ -1,8 +1,10 @@
 using System.Threading.Tasks;
 using Core.Actions.AppUsers;
 using Core.Actions.Photos;
+using Core.Actions.Profile;
 using Core.ViewModels;
 using Data;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,6 +27,14 @@ namespace API.Controllers
 
         [HttpGet("{username}")]
         public async Task<ActionResult<ProfileViewModel>> GetProfile(string username) =>
-            await Mediator.Send(new GetProfile.Query { Username = username });
+            await Mediator.Send(new FindOne.Query { Username = username });
+
+        [HttpPost("setprofilepic/{id}")]
+        public async Task<ActionResult<Unit>> SetProfilePicture(string id) =>
+            await Mediator.Send(new SetProfilePicture.Command { Id = id });
+
+        [HttpPut("updateprofile")]
+        public async Task<ActionResult<Unit>> UpdateProfile(Edit.Command editCommand) =>
+            await Mediator.Send(editCommand);
     }
 }

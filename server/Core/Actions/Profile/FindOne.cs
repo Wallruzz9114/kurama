@@ -6,9 +6,9 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Middleware.Contexts;
 
-namespace Core.Actions.Photos
+namespace Core.Actions.Profile
 {
-    public class GetProfile
+    public class FindOne
     {
         public class Query : IRequest<ProfileViewModel>
         {
@@ -24,6 +24,7 @@ namespace Core.Actions.Photos
             public async Task<ProfileViewModel> Handle(Query query, CancellationToken cancellationToken)
             {
                 var appUser = await _dataContext.Users.SingleOrDefaultAsync(au => au.UserName == query.Username);
+
                 return new ProfileViewModel
                 {
                     DisplayName = appUser.DisplayName,
