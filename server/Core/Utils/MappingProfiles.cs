@@ -17,6 +17,12 @@ namespace Core.Utils
                     aavm => aavm.ProfilePictureURL,
                     e => e.MapFrom(aa => aa.AppUser.Photos.FirstOrDefault(photo => photo.IsProfilePicture).URL)
                 );
+            CreateMap<Comment, CommentViewModel>()
+                .ForMember(cvm => cvm.Username, e => e.MapFrom(comment => comment.Author.UserName))
+                .ForMember(cvm => cvm.AppUserDisplayName, e => e.MapFrom(comment => comment.Author.DisplayName))
+                .ForMember(cvm => cvm.ImageURL, e => e.MapFrom(
+                    comment => comment.Author.Photos.FirstOrDefault(photo => photo.IsProfilePicture).URL)
+                );
         }
     }
 }

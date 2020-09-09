@@ -1,4 +1,5 @@
 using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
 using Core.Actions.Activities;
 using Core.Interfaces;
@@ -59,19 +60,37 @@ namespace API.Extensions.Installer
             var symetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["TokenKey"]));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = symetricSecurityKey,
                     ValidateAudience = false,
                     ValidateIssuer = false
-                });
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = mrContext =>
+                    {
+                        var accessToken = mrContext.Request.Query["access_token"];
+                        var path = mrContext.HttpContext.Request.Path;
+
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chat"))
+                            mrContext.Token = accessToken;
+
+                        return Task.CompletedTask;
+                    }
+                };
+            });
 
             services.AddScoped<IJWTGeneratorService, JWTGeneratorService>();
             services.AddScoped<IAppUserService, AppUserService>();
             services.AddScoped<IPhotoService, PhotoService>();
 
             services.Configure<CloudinarySettings>(configuration.GetSection("Cloudinary"));
+
+            services.AddSignalR();
         }
     }
 }

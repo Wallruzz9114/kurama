@@ -13,5 +13,6 @@ namespace Data
         public string City { get; set; }
         public string Venue { get; set; }
         public virtual IReadOnlyList<ActivityAttendee> ActivityAttendees { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }
