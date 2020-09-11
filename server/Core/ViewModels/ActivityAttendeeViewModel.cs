@@ -6,5 +6,6 @@ namespace Core.ViewModels
         public string DisplayName { get; set; }
         public string ProfilePictureURL { get; set; }
         public bool IsHosting { get; set; }
+        public bool IsFollowingAnyAttendees { get; set; }
     }
 }

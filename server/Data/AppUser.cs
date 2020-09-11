@@ -9,5 +9,7 @@ namespace Data
         public string Bio { get; set; }
         public virtual IReadOnlyList<ActivityAttendee> ActivityAttendees { get; set; }
         public virtual ICollection<Photo> Photos { get; set; }
+        public virtual ICollection<SocialLink> Favourites { get; set; }
+        public virtual ICollection<SocialLink> Followers { get; set; }
     }
 }

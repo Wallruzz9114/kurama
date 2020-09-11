@@ -16,7 +16,8 @@ namespace Core.Utils
                 .ForMember(
                     aavm => aavm.ProfilePictureURL,
                     e => e.MapFrom(aa => aa.AppUser.Photos.FirstOrDefault(photo => photo.IsProfilePicture).URL)
-                );
+                )
+                .ForMember(aamv => aamv.IsFollowingAnyAttendees, e => e.MapFrom<SocialLinkResolver>());
             CreateMap<Comment, CommentViewModel>()
                 .ForMember(cvm => cvm.Username, e => e.MapFrom(comment => comment.Author.UserName))
                 .ForMember(cvm => cvm.AppUserDisplayName, e => e.MapFrom(comment => comment.Author.DisplayName))

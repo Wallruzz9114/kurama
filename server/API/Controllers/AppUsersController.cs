@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Core.Actions.AppUsers;
 using Core.Actions.Photos;
-using Core.Actions.Profile;
+using Core.Actions.Profiles;
 using Core.ViewModels;
 using Data;
 using MediatR;

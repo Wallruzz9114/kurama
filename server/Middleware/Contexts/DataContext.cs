@@ -13,6 +13,7 @@ namespace Middleware.Contexts
         public DbSet<ActivityAttendee> ActivityAttendees { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<SocialLink> SocialLinks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,6 +30,21 @@ namespace Middleware.Contexts
                 .HasForeignKey(aua => aua.ActivityId);
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            modelBuilder.Entity<SocialLink>(builder =>
+            {
+                builder.HasKey(link => new { link.SourceUserId, link.TargetUserId });
+
+                builder.HasOne(link => link.SourceUser)
+                    .WithMany(user => user.Favourites)
+                    .HasForeignKey(l => l.SourceUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                builder.HasOne(link => link.TargetUser)
+                    .WithMany(user => user.Followers)
+                    .HasForeignKey(l => l.TargetUserId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
         }
     }
 }

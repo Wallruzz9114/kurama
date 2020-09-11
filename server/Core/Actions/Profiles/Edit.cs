@@ -7,7 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Middleware.Contexts;
 
-namespace Core.Actions.Profile
+namespace Core.Actions.Profiles
 {
     public class Edit
     {
