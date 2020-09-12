@@ -17,6 +17,7 @@ server/API/dump.rdb
 server/.DS_Store
 server/Infrastructure/bin
 server/Infrastructure/obj
+server/Makefile
 
 # dependencies
 web/node_modules
