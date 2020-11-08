@@ -1,42 +1,39 @@
-.vscode
+backend/.vscode
+backend/API/bin
+backend/API/obj
+backend/API/Logs
+backend/API/Properties
+backend/API/appsettings.Development.json
+backend/API/appsettings.json
+backend/Core/bin
+backend/Core/obj
+backend/Data/bin
+backend/Data/obj
+backend/.DS_Store
+backend/API/dump.rdb
+backend/.DS_Store
+backend/Makefile
 
-server/.vscode
-server/API/bin
-server/API/obj
-server/API/Properties
-server/API/appsettings.Development.json
-server/API/appsettings.json
-server/Core/bin
-server/Core/obj
-server/Middleware/bin
-server/Middleware/obj
-server/Data/bin
-server/Data/obj
-server/.DS_Store
-server/API/dump.rdb
-server/.DS_Store
-server/Infrastructure/bin
-server/Infrastructure/obj
-server/Makefile
-
-# dependencies
-web/node_modules
-web/.pnp
-web/.pnp.js
-
+frontend/website/node_modules
+frontend/website/.pnp
+frontend/website/.pnp.js
 # testing
-web/coverage
+frontend/website/coverage
 
 # production
-web/build
+frontend/website/build
 
 # misc
-web/.DS_Store
-web/.env.local
-web/.env.development.local
-web/.env.test.local
-web/.env.production.local
+frontend/website/.DS_Store
+frontend/website/.env.local
+frontend/website/.env.development.local
+frontend/website/.env.test.local
+frontend/website/.env.production.local
 
-web/npm-debug.log*
-web/yarn-debug.log*
-web/yarn-error.log*
+frontend/website/.eslintrc
+frontend/website/.eslintignore
+frontend/website/.prettierrc
+
+frontend/website/npm-debug.log*
+frontend/website/yarn-debug.log*
+frontend/website/yarn-error.log*
