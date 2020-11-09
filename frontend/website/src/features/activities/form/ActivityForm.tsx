@@ -1,27 +1,44 @@
 import { observer } from 'mobx-react-lite';
-import React, { FormEvent, useContext, useState } from 'react';
+import React, { FormEvent, useContext, useEffect, useState } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import { Button, Form, Segment } from 'semantic-ui-react';
 import { v4 as uuid } from 'uuid';
 import ActivityStore from '../../../app/mobx/activityStore';
 import { IActivity } from '../../../app/models/activity';
 
-const ActivityForm: React.FC = () => {
+interface DetailParams {
+  id: string;
+}
+
+const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({ match, history }) => {
   const activityStore = useContext(ActivityStore);
+  const [activity, setActivity] = useState<IActivity>({
+    id: '',
+    title: '',
+    category: '',
+    description: '',
+    dateTime: '',
+    city: '',
+    venue: '',
+  });
 
-  const initializeForm = () =>
-    activityStore.selectedActivity
-      ? activityStore.selectedActivity
-      : {
-          id: '',
-          title: '',
-          category: '',
-          description: '',
-          dateTime: '',
-          city: '',
-          venue: '',
-        };
+  useEffect(() => {
+    if (match.params.id && activity.id.length === 0) {
+      activityStore
+        .loadActivity(match.params.id)
+        .then(() => activityStore.activity && setActivity(activityStore.activity));
+    }
 
-  const [activity, setActivity] = useState<IActivity>(initializeForm);
+    return () => {
+      activityStore.clearActivity();
+    };
+  }, [
+    activityStore.loadActivity,
+    activityStore.clearActivity,
+    match.params.id,
+    activityStore.activity,
+    activity.id.length,
+  ]);
 
   const inputChangeHandler = (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setActivity({
@@ -29,10 +46,16 @@ const ActivityForm: React.FC = () => {
       [event.currentTarget.name]: event.currentTarget.value,
     });
 
-  const submitForm = () =>
-    activity.id.length === 0
-      ? activityStore.createActivity({ ...activity, id: uuid() })
-      : activityStore.updateActivity(activity);
+  const submitForm = () => {
+    if (activity.id.length === 0) {
+      const newActivity = { ...activity, id: uuid() };
+      activityStore
+        .createActivity(newActivity)
+        .then(() => history.push(`/activities/${newActivity.id}`));
+    } else {
+      activityStore.updateActivity(activity).then(() => history.push(`/activities/${activity.id}`));
+    }
+  };
 
   return (
     <Segment clearing>
@@ -82,7 +105,12 @@ const ActivityForm: React.FC = () => {
           type="submit"
           content="Submit"
         />
-        <Button onClick={activityStore.cancelForm} floated="right" type="submit" content="Cancel" />
+        <Button
+          onClick={() => history.push('/activities')}
+          floated="right"
+          type="submit"
+          content="Cancel"
+        />
       </Form>
     </Segment>
   );

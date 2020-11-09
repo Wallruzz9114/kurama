@@ -1,39 +1,50 @@
 import { observer } from 'mobx-react-lite';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
+import { Link, RouteComponentProps, useHistory } from 'react-router-dom';
 import { Button, Card, Image } from 'semantic-ui-react';
+import LoadingComponent from '../../../app/components/LoadingComponent';
 import ActivityStore from '../../../app/mobx/activityStore';
 
-const ActivityDetails: React.FC = () => {
+interface DetailParams {
+  id: string;
+}
+
+const ActivityDetails: React.FC<RouteComponentProps<DetailParams>> = ({ match }) => {
   const activityStore = useContext(ActivityStore);
+  const history = useHistory();
+
+  useEffect(() => {
+    activityStore.loadActivity(match.params.id);
+  }, [activityStore.loadActivity, match.params.id]);
+
+  if (activityStore.loadingInitial || !activityStore.activity)
+    return <LoadingComponent content="Loading activity..." />;
 
   return (
     <Card fluid>
       <Image
-        src={`/assets/categoryImages/${activityStore.selectedActivity?.category}.jpg`}
+        src={`/assets/categoryImages/${activityStore.activity?.category}.jpg`}
         wrapped
         ui={false}
       />
       <Card.Content>
-        <Card.Header>{activityStore.selectedActivity?.title}</Card.Header>
+        <Card.Header>{activityStore.activity?.title}</Card.Header>
         <Card.Meta>
-          <span className="date">{activityStore.selectedActivity?.dateTime}</span>
+          <span className="date">{activityStore.activity?.dateTime}</span>
         </Card.Meta>
-        <Card.Description>{activityStore.selectedActivity?.description}</Card.Description>
+        <Card.Description>{activityStore.activity?.description}</Card.Description>
       </Card.Content>
       <Card.Content extra>
         <Button.Group widths={2}>
           <Button
-            onClick={() => {
-              activityStore.selectedActivity != null
-                ? activityStore.openEditForm(activityStore.selectedActivity.id)
-                : console.log('Selected activity is undefined');
-            }}
+            as={Link}
+            to={`/manage/${activityStore.activity.id}`}
             basic
             color="blue"
             content="Edit"
           />
           <Button
-            onClick={activityStore.cancelSelectedActivity}
+            onClick={() => history.push('/activities')}
             basic
             color="yellow"
             content="Cancel"
