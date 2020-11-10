@@ -24,8 +24,6 @@ namespace Core.Actions.Activities
 
             public async Task<Activity> Handle(Query query, CancellationToken cancellationToken)
             {
-                throw new Exception("Computer says no");
-
                 var activity = await _databaseContext.Activities.FindAsync(query.Id);
 
                 if (activity == null)
