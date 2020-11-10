@@ -1,7 +1,10 @@
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Errors;
 using Data.Contexts;
+using FluentValidation;
 using MediatR;
 
 namespace Core.Actions.Activities
@@ -19,6 +22,19 @@ namespace Core.Actions.Activities
             public string Venue { get; set; }
         }
 
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(x => x.Title).NotEmpty();
+                RuleFor(x => x.Description).NotEmpty();
+                RuleFor(x => x.Category).NotEmpty();
+                RuleFor(x => x.DateTime).NotEmpty();
+                RuleFor(x => x.City).NotEmpty();
+                RuleFor(x => x.Venue).NotEmpty();
+            }
+        }
+
         public class Handler : IRequestHandler<Command>
         {
             private readonly DatabaseContext _databaseContext;
@@ -29,7 +45,8 @@ namespace Core.Actions.Activities
             {
                 var activityToEdit = await _databaseContext.Activities.FindAsync(command.Id);
 
-                if (activityToEdit == null) throw new Exception("Could not find activity to edit");
+                if (activityToEdit == null)
+                    throw new RESTException(HttpStatusCode.NotFound, new { activity = "Not found" });
 
                 activityToEdit.Title = command.Title ?? activityToEdit.Title;
                 activityToEdit.Description = command.Description ?? activityToEdit.Description;

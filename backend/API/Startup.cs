@@ -1,4 +1,5 @@
 using API.Configuration;
+using API.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -17,9 +18,9 @@ namespace API
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseCors("CorsPolicy");
             app.UseRouting();
-
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }

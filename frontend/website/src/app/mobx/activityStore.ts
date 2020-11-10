@@ -51,8 +51,6 @@ class ActivityStore {
 
         this.loadingInitial = false;
       });
-
-      console.log(this.activitiesGroupedByDate(activities));
     } catch (error) {
       runInAction(() => {
         this.loadingInitial = false;
