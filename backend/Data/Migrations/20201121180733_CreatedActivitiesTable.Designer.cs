@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20201104051441_CreatedActivitiesTable")]
+    [Migration("20201121180733_CreatedActivitiesTable")]
     partial class CreatedActivitiesTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,7 +33,7 @@ namespace Data.Migrations
                     b.Property<string>("City")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("DateTime")
+                    b.Property<DateTime?>("Date")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Description")

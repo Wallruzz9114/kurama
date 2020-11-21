@@ -17,7 +17,7 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({ match, hist
     title: '',
     category: '',
     description: '',
-    dateTime: '',
+    date: '',
     city: '',
     venue: '',
   });
@@ -86,7 +86,7 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({ match, hist
               name="date"
               type="datetime-local"
               placeholder="Date"
-              value={activity.dateTime}
+              value={activity.date}
             />
             <Form.Input
               onChange={inputChangeHandler}

@@ -22,7 +22,7 @@ const ActivityDetailsInfo: React.FC<{ activity: IActivity }> = ({ activity }) =>
             <Icon name="calendar" size="large" color="teal" />
           </Grid.Column>
           <Grid.Column width={15}>
-            <span>{activity.dateTime}</span>
+            <span>{activity.date}</span>
           </Grid.Column>
         </Grid>
       </Segment>

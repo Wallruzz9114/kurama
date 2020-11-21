@@ -17,7 +17,7 @@ namespace Core.Actions.Activities
             public string Title { get; set; }
             public string Description { get; set; }
             public string Category { get; set; }
-            public DateTime? DateTime { get; set; }
+            public DateTime? Date { get; set; }
             public string City { get; set; }
             public string Venue { get; set; }
         }
@@ -29,7 +29,7 @@ namespace Core.Actions.Activities
                 RuleFor(x => x.Title).NotEmpty();
                 RuleFor(x => x.Description).NotEmpty();
                 RuleFor(x => x.Category).NotEmpty();
-                RuleFor(x => x.DateTime).NotEmpty();
+                RuleFor(x => x.Date).NotEmpty();
                 RuleFor(x => x.City).NotEmpty();
                 RuleFor(x => x.Venue).NotEmpty();
             }
@@ -51,7 +51,7 @@ namespace Core.Actions.Activities
                 activityToEdit.Title = command.Title ?? activityToEdit.Title;
                 activityToEdit.Description = command.Description ?? activityToEdit.Description;
                 activityToEdit.Category = command.Category ?? activityToEdit.Category;
-                activityToEdit.DateTime = command.DateTime ?? activityToEdit.DateTime;
+                activityToEdit.Date = command.Date ?? activityToEdit.Date;
                 activityToEdit.City = command.City ?? activityToEdit.City;
                 activityToEdit.Venue = command.Venue ?? activityToEdit.Venue;
 

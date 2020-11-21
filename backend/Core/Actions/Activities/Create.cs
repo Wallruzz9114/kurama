@@ -16,7 +16,7 @@ namespace Core.Actions.Activities
             public string Title { get; set; }
             public string Description { get; set; }
             public string Category { get; set; }
-            public DateTime DateTime { get; set; }
+            public DateTime Date { get; set; }
             public string City { get; set; }
             public string Venue { get; set; }
         }
@@ -28,7 +28,7 @@ namespace Core.Actions.Activities
                 RuleFor(x => x.Title).NotEmpty();
                 RuleFor(x => x.Description).NotEmpty();
                 RuleFor(x => x.Category).NotEmpty();
-                RuleFor(x => x.DateTime).NotEmpty();
+                RuleFor(x => x.Date).NotEmpty();
                 RuleFor(x => x.City).NotEmpty();
                 RuleFor(x => x.Venue).NotEmpty();
             }
@@ -47,7 +47,7 @@ namespace Core.Actions.Activities
                     Title = command.Title,
                     Description = command.Description,
                     Category = command.Category,
-                    DateTime = command.DateTime,
+                    Date = command.Date,
                     City = command.City,
                     Venue = command.Venue
                 };
