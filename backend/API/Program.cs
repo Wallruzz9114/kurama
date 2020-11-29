@@ -65,7 +65,7 @@ namespace API
                         path: Path.Combine(
                             hostingContext.HostingEnvironment.ContentRootPath +
                             $"{Path.DirectorySeparatorChar}Logs{Path.DirectorySeparatorChar}",
-                            $"comme_log_{DateTime.Now:yyyyMMdd}.txt"
+                            $"kurama_log_{DateTime.Now:yyyyMMdd}.txt"
                         )
                     ).ReadFrom.Configuration(hostingContext.Configuration)
                 );

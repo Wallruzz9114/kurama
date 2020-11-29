@@ -11,6 +11,7 @@ backend/Core/bin
 backend/Core/obj
 backend/Data/bin
 backend/Data/obj
+backend/Data/Migrations
 backend/node_modules/bin
 backend/Models/obj
 backend/.DS_Store

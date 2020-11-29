@@ -1,9 +1,11 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Interfaces;
 using Data.Contexts;
 using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Models;
 
 namespace Core.Actions.Activities
@@ -37,7 +39,13 @@ namespace Core.Actions.Activities
         public class Handler : IRequestHandler<Command>
         {
             private readonly DatabaseContext _databaseContext;
-            public Handler(DatabaseContext databaseContext) => _databaseContext = databaseContext;
+            private readonly IUserAccessor _userAccessor;
+
+            public Handler(DatabaseContext databaseContext, IUserAccessor userAccessor)
+            {
+                _databaseContext = databaseContext;
+                _userAccessor = userAccessor;
+            }
 
             public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
             {
@@ -51,11 +59,23 @@ namespace Core.Actions.Activities
                     City = command.City,
                     Venue = command.Venue
                 };
+                var appUser = await _databaseContext.Users.SingleOrDefaultAsync(
+                    x => x.UserName == _userAccessor.GetCurrentUsername()
+                );
+                var activityAttendee = new ActivityAttendee
+                {
+                    AppUser = appUser,
+                    Activity = activity,
+                    IsHost = true,
+                    DateJoined = DateTime.Now,
+                };
 
                 _databaseContext.Activities.Add(activity);
-                var activitySuccessfullyCreated = await _databaseContext.SaveChangesAsync() > 0;
+                _databaseContext.ActivityAttendees.Add(activityAttendee);
 
-                if (activitySuccessfullyCreated) return Unit.Value;
+                var dataSuccessfullySaved = await _databaseContext.SaveChangesAsync() > 0;
+
+                if (dataSuccessfullySaved) return Unit.Value;
 
                 throw new Exception("Problem creating new activity");
             }

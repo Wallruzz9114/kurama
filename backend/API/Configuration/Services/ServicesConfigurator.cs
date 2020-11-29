@@ -1,7 +1,9 @@
 using System.Text;
+using AutoMapper;
 using Core.Actions.Activities;
 using Core.Implementations;
 using Core.Interfaces;
+using Core.Security.Authorization;
 using Data.Contexts;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -34,14 +36,23 @@ namespace API.Configuration.Services
                 options.Filters.Add(new AuthorizeFilter(authorizationPolicy));
             }).AddFluentValidation(config => config.RegisterValidatorsFromAssemblyContaining<Create>());
 
-            services.AddDbContext<DatabaseContext>(ob => ob.UseNpgsql(configuration.GetConnectionString("DatabaseConnection")));
+            services.AddDbContext<DatabaseContext>(options =>
+            {
+                options.UseLazyLoadingProxies();
+                options.UseNpgsql(configuration.GetConnectionString("DatabaseConnection"));
+            });
+
             services.AddMediatR(typeof(GetAll.Handler).Assembly);
+            services.AddAutoMapper(typeof(GetAll.Handler));
 
             var builder = services.AddIdentityCore<AppUser>();
             var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
 
             identityBuilder.AddEntityFrameworkStores<DatabaseContext>();
             identityBuilder.AddSignInManager<SignInManager<AppUser>>();
+
+            services.AddAuthorization(options => options.AddPolicy("IsHost", policy => policy.Requirements.Add(new IsHostRequirement())));
+            services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
 
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["TokenKey"]));
 

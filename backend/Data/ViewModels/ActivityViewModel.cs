@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
-namespace Models
+namespace Data.ViewModels
 {
-    public class Activity
+    public class ActivityViewModel
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
@@ -12,6 +13,8 @@ namespace Models
         public DateTime? Date { get; set; }
         public string City { get; set; }
         public string Venue { get; set; }
-        public virtual ICollection<ActivityAttendee> ActivityAttendees { get; set; }
+
+        [JsonPropertyName("attendees")]
+        public ICollection<ActivityAttendeeViewModel> ActivityAttendees { get; set; }
     }
 }
