@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Core.Actions.AppUsers;
 using Data.ViewModels;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,5 +24,9 @@ namespace API.Controllers
         [HttpGet("getprofile/{username}")]
         public async Task<ActionResult<ProfileViewModel>> GetProfile(string username) =>
             await Mediator.Send(new GetProfile.Query { Username = username });
+
+        [HttpPut("updatebio")]
+        public async Task<ActionResult<Unit>> UpdateBio(UpdateBio.Command updateBioCommand) =>
+            await Mediator.Send(updateBioCommand);
     }
 }
