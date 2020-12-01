@@ -59,9 +59,7 @@ namespace Core.Actions.Activities
                     City = command.City,
                     Venue = command.Venue
                 };
-                var appUser = await _databaseContext.Users.SingleOrDefaultAsync(
-                    x => x.UserName == _userAccessor.GetCurrentUsername()
-                );
+                var appUser = await _databaseContext.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
                 var activityAttendee = new ActivityAttendee
                 {
                     AppUser = appUser,

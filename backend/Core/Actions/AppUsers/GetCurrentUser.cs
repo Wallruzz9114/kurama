@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Interfaces;
@@ -34,7 +35,7 @@ namespace Core.Actions.AppUsers
                     DisplayName = appUser.DisplayName,
                     Username = appUser.UserName,
                     Token = _jwtGenerator.CreateToken(appUser),
-                    PictureURL = null,
+                    PictureURL = appUser.Photos.FirstOrDefault(x => x.IsMain)?.URL,
                 };
             }
         }

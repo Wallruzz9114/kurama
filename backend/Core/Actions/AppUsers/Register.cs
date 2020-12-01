@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -72,7 +73,7 @@ namespace Core.Actions.AppUsers
                         DisplayName = appUser.DisplayName,
                         Token = _jwtGenerator.CreateToken(appUser),
                         Username = appUser.UserName,
-                        PictureURL = null,
+                        PictureURL = appUser.Photos.FirstOrDefault(x => x.IsMain)?.URL,
                     };
 
                 throw new Exception("Problem while registering user");

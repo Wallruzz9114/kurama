@@ -4,6 +4,7 @@ using Core.Actions.Activities;
 using Core.Implementations;
 using Core.Interfaces;
 using Core.Security.Authorization;
+using Core.Security.Settings;
 using Data.Contexts;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -69,6 +70,8 @@ namespace API.Configuration.Services
 
             services.AddScoped<IJWTGenerator, JWTGenerator>();
             services.AddScoped<IUserAccessor, UserAccessor>();
+            services.AddScoped<IImageAccessor, ImageAccessor>();
+            services.Configure<CloudinarySettings>(configuration.GetSection("Cloudinary"));
         }
     }
 }

@@ -19,5 +19,9 @@ namespace API.Controllers
 
         [HttpGet("getcurrentuser")]
         public async Task<ActionResult<AppUserViewModel>> GetCurrentUser() => await Mediator.Send(new GetCurrentUser.Query());
+
+        [HttpGet("getprofile/{username}")]
+        public async Task<ActionResult<ProfileViewModel>> GetProfile(string username) =>
+            await Mediator.Send(new GetProfile.Query { Username = username });
     }
 }

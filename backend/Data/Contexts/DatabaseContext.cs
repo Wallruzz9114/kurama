@@ -11,16 +11,24 @@ namespace Data.Contexts
 
         public DbSet<Activity> Activities { get; set; }
         public DbSet<ActivityAttendee> ActivityAttendees { get; set; }
+        public DbSet<Photo> Photos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<ActivityAttendee>(x => x.HasKey(ua => new { ua.AppUserId, ua.ActivityId }));
+
+            modelBuilder.Entity<AppUser>()
+                .HasMany(p => p.Photos)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<ActivityAttendee>()
                 .HasOne(u => u.AppUser)
                 .WithMany(a => a.ActivityAttendees)
                 .HasForeignKey(u => u.AppUserId);
+
             modelBuilder.Entity<ActivityAttendee>()
                 .HasOne(a => a.Activity)
                 .WithMany(u => u.ActivityAttendees)
