@@ -16,5 +16,6 @@ namespace Data.ViewModels
 
         [JsonPropertyName("attendees")]
         public ICollection<ActivityAttendeeViewModel> ActivityAttendees { get; set; }
+        public ICollection<CommentViewModel> Comments { get; set; }
     }
 }

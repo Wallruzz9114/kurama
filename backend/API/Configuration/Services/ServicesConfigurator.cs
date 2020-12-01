@@ -1,4 +1,5 @@
 using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
 using Core.Actions.Activities;
 using Core.Implementations;
@@ -46,6 +47,8 @@ namespace API.Configuration.Services
             services.AddMediatR(typeof(GetAll.Handler).Assembly);
             services.AddAutoMapper(typeof(GetAll.Handler));
 
+            services.AddSignalR();
+
             var builder = services.AddIdentityCore<AppUser>();
             var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
 
@@ -65,6 +68,20 @@ namespace API.Configuration.Services
                     IssuerSigningKey = symmetricSecurityKey,
                     ValidateAudience = false,
                     ValidateIssuer = false,
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+
+                        if (!string.IsNullOrEmpty(path) && path.StartsWithSegments("/hubs"))
+                            context.Token = accessToken;
+
+                        return Task.CompletedTask;
+                    }
                 };
             });
 

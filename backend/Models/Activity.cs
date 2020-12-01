@@ -13,5 +13,6 @@ namespace Models
         public string City { get; set; }
         public string Venue { get; set; }
         public virtual ICollection<ActivityAttendee> ActivityAttendees { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }
