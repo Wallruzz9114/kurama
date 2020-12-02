@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Actions.AppUsers;
 using Data.ViewModels;
@@ -28,5 +29,17 @@ namespace API.Controllers
         [HttpPut("updatebio")]
         public async Task<ActionResult<Unit>> UpdateBio(UpdateBio.Command updateBioCommand) =>
             await Mediator.Send(updateBioCommand);
+
+        [HttpPost("follow/{username}")]
+        public async Task<ActionResult<Unit>> Follow(string username) =>
+            await Mediator.Send(new Follow.Command { Username = username });
+
+        [HttpDelete("unfollow/{username}")]
+        public async Task<ActionResult<Unit>> Unfollow(string username) =>
+            await Mediator.Send(new Unfollow.Command { Username = username });
+
+        [HttpGet("getrelationship/{username}")]
+        public async Task<ActionResult<List<ProfileViewModel>>> GetRelationship(string username, string relationship) =>
+            await Mediator.Send(new GetRelationship.Query { Username = username, Relationship = relationship });
     }
 }

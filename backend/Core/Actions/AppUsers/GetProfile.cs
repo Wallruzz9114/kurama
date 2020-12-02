@@ -1,10 +1,8 @@
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Data.Contexts;
+using Core.Interfaces;
 using Data.ViewModels;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Core.Actions.AppUsers
 {
@@ -17,23 +15,12 @@ namespace Core.Actions.AppUsers
 
         public class Handler : IRequestHandler<Query, ProfileViewModel>
         {
-            private readonly DatabaseContext _databaseContext;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler(DatabaseContext databaseContext) => _databaseContext = databaseContext;
+            public Handler(IUserAccessor userAccessor) => _userAccessor = userAccessor;
 
-            public async Task<ProfileViewModel> Handle(Query query, CancellationToken cancellationToken)
-            {
-                var appUser = await _databaseContext.Users.SingleOrDefaultAsync(x => x.UserName == query.Username);
-
-                return new ProfileViewModel
-                {
-                    DisplayName = appUser.DisplayName,
-                    Username = appUser.UserName,
-                    PictureURL = appUser.Photos.FirstOrDefault(x => x.IsMain)?.URL,
-                    Photos = appUser.Photos,
-                    Bio = appUser.Bio,
-                };
-            }
+            public async Task<ProfileViewModel> Handle(Query query, CancellationToken cancellationToken) =>
+                await _userAccessor.GetProfile(query.Username);
         }
     }
 }

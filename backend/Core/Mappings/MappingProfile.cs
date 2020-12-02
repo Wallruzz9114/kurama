@@ -14,7 +14,9 @@ namespace Core.Mappings
             CreateMap<ActivityAttendee, ActivityAttendeeViewModel>()
                 .ForMember(d => d.Username, o => o.MapFrom(s => s.AppUser.UserName))
                 .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.AppUser.DisplayName))
-                .ForMember(d => d.PictureURL, o => o.MapFrom(s => s.AppUser.Photos.FirstOrDefault(x => x.IsMain).URL));
+                .ForMember(d => d.PictureURL, o => o.MapFrom(s => s.AppUser.Photos.FirstOrDefault(x => x.IsMain).URL))
+                .ForMember(d => d.Following, o => o.MapFrom<FollowingResolver>())
+                .ForMember(d => d.IsFollower, o => o.MapFrom<IsFollowerResolver>());
 
             CreateMap<Comment, CommentViewModel>()
                 .ForMember(d => d.Username, o => o.MapFrom(s => s.AppUser.UserName))

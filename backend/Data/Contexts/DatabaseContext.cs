@@ -13,6 +13,7 @@ namespace Data.Contexts
         public DbSet<ActivityAttendee> ActivityAttendees { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<UserRelationship> UserRelationships { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,6 +35,21 @@ namespace Data.Contexts
                 .HasOne(a => a.Activity)
                 .WithMany(u => u.ActivityAttendees)
                 .HasForeignKey(a => a.ActivityId);
+
+            modelBuilder.Entity<UserRelationship>(mb =>
+            {
+                mb.HasKey(k => new { k.FollowerId, k.UserFollowedId });
+
+                mb.HasOne(uwfi => uwfi.Follower)
+                    .WithMany(f => f.UsersFollowed)
+                    .HasForeignKey(fk => fk.FollowerId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                mb.HasOne(utbf => utbf.UserFollowed)
+                    .WithMany(f => f.Followers)
+                    .HasForeignKey(fk => fk.UserFollowedId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }

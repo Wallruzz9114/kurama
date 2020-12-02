@@ -9,5 +9,7 @@ namespace Models
         public string Bio { get; set; }
         public virtual ICollection<ActivityAttendee> ActivityAttendees { get; set; }
         public virtual ICollection<Photo> Photos { get; set; }
+        public virtual ICollection<UserRelationship> UsersFollowed { get; set; }
+        public virtual ICollection<UserRelationship> Followers { get; set; }
     }
 }
