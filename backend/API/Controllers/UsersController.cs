@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Core.Actions.Activities;
 using Core.Actions.AppUsers;
 using Data.ViewModels;
 using MediatR;
@@ -41,5 +42,9 @@ namespace API.Controllers
         [HttpGet("getrelationship/{username}")]
         public async Task<ActionResult<List<ProfileViewModel>>> GetRelationship(string username, string relationship) =>
             await Mediator.Send(new GetRelationship.Query { Username = username, Relationship = relationship });
+
+        [HttpGet("activities/{username}")]
+        public async Task<ActionResult<List<ActivityAttendedViewModel>>> GetActivitiesAttended(string username, string predicate) =>
+            await Mediator.Send(new ListAttendedActivities.Query { Username = username, Predicate = predicate });
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Actions.Activities;
 using Data.ViewModels;
@@ -12,7 +11,8 @@ namespace API.Controllers
     public class ActivitiesController : BaseController
     {
         [HttpGet]
-        public async Task<ActionResult<List<ActivityViewModel>>> GetAll() => await Mediator.Send(new GetAll.Query());
+        public async Task<ActionResult<PaginatedActivities>> GetAll(int? limit, int? offset, bool isGoing, bool isHost, DateTime? startDate) =>
+            await Mediator.Send(new GetAll.Query(limit, offset, isGoing, isHost, startDate));
 
         [Authorize]
         [HttpGet("{id}")]
